@@ -67,10 +67,10 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         Log.d(TAG, "FLOW: onMapReady")
         map = googleMap
-        getDeviceLocation()
         setMapStyle()
         setMapLongClick()
         setPoiClick()
+        getDeviceLocation()
     }
 
     private fun setPoiClick() {
