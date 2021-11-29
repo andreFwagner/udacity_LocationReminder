@@ -205,48 +205,6 @@ class SaveReminderFragment : BaseFragment() {
         )
     }
 
-//    private fun checkDeviceLocationSettingsAndStartGeofence(resolve: Boolean = true) {
-//        val locationRequest = LocationRequest.create().apply {
-//            priority = LocationRequest.PRIORITY_LOW_POWER
-//        }
-//        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-//
-//        val settingsClient = LocationServices.getSettingsClient(contxt)
-//        val locationSettingsResponseTask =
-//            settingsClient.checkLocationSettings(builder.build())
-//
-//        locationSettingsResponseTask.addOnFailureListener { exception ->
-//            if (exception is ResolvableApiException && resolve) {
-//                // Location settings are not satisfied, but this can be fixed
-//                // by showing the user a dialog.
-//                try {
-//                    // Show the dialog by calling startResolutionForResult(),
-//                    // and check the result in onActivityResult().
-//                    exception.startResolutionForResult(
-//                        activity,
-//                        REQUEST_TURN_DEVICE_LOCATION_ON
-//                    )
-//                } catch (sendEx: IntentSender.SendIntentException) {
-//                    Log.d(TAG, "Error geting location settings resolution: " + sendEx.message)
-//                }
-//            } else {
-//                Snackbar.make(
-//                    binding.saveReminderFragment,
-//                    R.string.location_required_error, Snackbar.LENGTH_INDEFINITE
-//                ).setAction(android.R.string.ok) {
-//                    checkDeviceLocationSettingsAndStartGeofence()
-//                }.show()
-//            }
-//        }
-//        locationSettingsResponseTask.addOnCompleteListener {
-//            if (it.isSuccessful) {
-//                if (_viewModel.validateAndSaveReminder(newReminder)) {
-//                    addNewGeofence()
-//                }
-//            }
-//        }
-//    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
