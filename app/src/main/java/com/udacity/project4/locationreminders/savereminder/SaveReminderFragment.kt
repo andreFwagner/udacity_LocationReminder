@@ -5,7 +5,6 @@ import android.annotation.TargetApi
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +14,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
-import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 import com.udacity.project4.R
@@ -113,8 +111,7 @@ class SaveReminderFragment : BaseFragment() {
                 longitude
             )
 
-                checkPermissionsAndStartGeofencing()
-
+            checkPermissionsAndStartGeofencing()
         }
     }
 
@@ -153,7 +150,7 @@ class SaveReminderFragment : BaseFragment() {
 
     private fun checkPermissionsAndStartGeofencing() {
         if (foregroundAndBackgroundLocationPermissionApproved()) {
-           addNewGeofence()
+            addNewGeofence()
         } else {
             requestForegroundAndBackgroundLocationPermissions()
         }
