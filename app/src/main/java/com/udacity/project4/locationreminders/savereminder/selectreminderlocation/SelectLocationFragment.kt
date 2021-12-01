@@ -65,7 +65,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        Log.d(TAG, "FLOW: onMapReady")
         map = googleMap
         setMapStyle()
         setMapLongClick()
@@ -126,12 +125,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
          * Get the best and most recent location of the device, which may be null in rare
          * cases when a location is not available.
          */
-        Log.d(TAG, "FLOW: getDeviceLocation")
         val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        Log.d(TAG, "FLOW: after require context")
         try {
             if (isPermissionGranted()) {
-                Log.d(TAG, "FLOW: permission granted")
                 map.isMyLocationEnabled = true
                 val locationResult = fusedLocationProviderClient.lastLocation
                 locationResult.addOnCompleteListener(requireActivity()) { task ->
@@ -160,14 +156,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                     }
                 }
             } else {
-                Log.d(TAG, "FLOW: ask for permission")
                 requestPermissions(
                     arrayOf<String>(android.Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_PERMISSION
                 )
-                Log.d(TAG, "FLOW: asked for permission")
             }
         } catch (e: SecurityException) {
-            Log.d(TAG, "FLOW: other exception $e")
             Log.e("Exception: %s", e.message, e)
         }
     }
@@ -189,10 +182,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        Log.d(TAG, "FLOW: entered onRequestPermissionResult")
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_LOCATION_PERMISSION && grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "FLOW: granted")
             getDeviceLocation()
         } else {
             Snackbar.make(
