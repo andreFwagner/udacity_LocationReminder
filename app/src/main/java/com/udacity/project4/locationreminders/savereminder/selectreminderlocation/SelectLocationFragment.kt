@@ -1,5 +1,6 @@
 package com.udacity.project4.locationreminders.savereminder.selectreminderlocation
 
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.location.Location
@@ -10,6 +11,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
@@ -19,12 +21,11 @@ import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
-import kotlinx.android.synthetic.main.fragment_save_reminder.*
-import kotlinx.android.synthetic.main.fragment_select_location.*
 import org.koin.android.ext.android.inject
 import java.util.*
 
 private const val TAG = "SaveReminderFragment"
+private const val REQUEST_TURN_DEVICE_LOCATION_ON = 29
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
@@ -54,6 +55,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         setHasOptionsMenu(true)
         setDisplayHomeAsUpEnabled(true)
 
+
+        checkDeviceLocationSettingsAndGetLocation()
         val mapFragment = childFragmentManager.findFragmentById(R.id.select_map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
@@ -175,6 +178,46 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             val toast = Toast.makeText(context, resources.getString(R.string.select_location), Toast.LENGTH_SHORT)
             toast.show()
         }
+    }
+
+    private fun checkDeviceLocationSettingsAndGetLocation(resolve: Boolean = true) {
+        val locationRequest = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_LOW_POWER
+        }
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+
+        val settingsClient = LocationServices.getSettingsClient(requireContext())
+        val locationSettingsResponseTask =
+            settingsClient.checkLocationSettings(builder.build())
+
+        locationSettingsResponseTask.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException && resolve) {
+                // Location settings are not satisfied, but this can be fixed
+                // by showing the user a dialog.
+                try {
+                    // Show the dialog by calling startResolutionForResult(),
+                    // and check the result in onActivityResult().
+                    exception.startResolutionForResult(
+                        activity,
+                        REQUEST_TURN_DEVICE_LOCATION_ON
+                    )
+                } catch (sendEx: IntentSender.SendIntentException) {
+                    Log.d(TAG, "Error getting location settings resolution: " + sendEx.message)
+                }
+            } else {
+                Snackbar.make(
+                    this.requireView(),
+                    R.string.location_required_error, Snackbar.LENGTH_INDEFINITE
+                ).setAction(android.R.string.ok) {
+                    checkDeviceLocationSettingsAndGetLocation()
+                }.show()
+            }
+        }
+//        locationSettingsResponseTask.addOnCompleteListener {
+//            if (it.isSuccessful) {
+//                //success
+//            }
+//        }
     }
 
     override fun onRequestPermissionsResult(
