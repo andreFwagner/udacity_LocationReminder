@@ -56,7 +56,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         setDisplayHomeAsUpEnabled(true)
 
 
-        checkDeviceLocationSettingsAndGetLocation()
+        checkDeviceLocationSettings()
         val mapFragment = childFragmentManager.findFragmentById(R.id.select_map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
@@ -180,7 +180,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         }
     }
 
-    private fun checkDeviceLocationSettingsAndGetLocation(resolve: Boolean = true) {
+    private fun checkDeviceLocationSettings(resolve: Boolean = true) {
         val locationRequest = LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_LOW_POWER
         }
@@ -209,15 +209,10 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                     this.requireView(),
                     R.string.location_required_error, Snackbar.LENGTH_INDEFINITE
                 ).setAction(android.R.string.ok) {
-                    checkDeviceLocationSettingsAndGetLocation()
+                    checkDeviceLocationSettings()
                 }.show()
             }
         }
-//        locationSettingsResponseTask.addOnCompleteListener {
-//            if (it.isSuccessful) {
-//                //success
-//            }
-//        }
     }
 
     override fun onRequestPermissionsResult(
